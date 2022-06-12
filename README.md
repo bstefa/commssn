@@ -12,8 +12,10 @@ To commission a new device follow these steps:
 
 2. Install [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-and-upgrading-ansible-with-pip) with pip.
    ```bash
-   curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-   python get-pip.py --user
+   sudo apt update
+   sudo apt install software-properties-common
+   sudo add-apt-repository --yes --update ppa:ansible/ansible
+   sudo apt install ansible
    ```
    
 3. Clone this repo.
