@@ -1,0 +1,73 @@
+- hosts: localhost 
+  vars:
+    home: /home/{{ ansible_user_id }}
+    nvim_location: /home/{{ ansible_user_id }}/.local/applications/neovim
+  tasks:
+
+    - name: Create ~/dev
+      file:
+        path: "{{ home }}/dev"
+        state: directory
+    - name: Create ~/dev/src-third-party
+      file:
+        path: "{{ home }}/dev/src-third-party"
+        state: directory
+
+    - name: Create ~/.local/bin
+      file:
+        path: "{{ home }}/.local/bin"
+        state: directory
+    - name: Create ~/.local/bin/applications
+      file:
+        path: "{{ home }}/.local/applications"
+        state: directory
+    - name: Create ~/.local/share/fonts
+      file:
+        path: "{{ home }}/.local/share/fonts"
+        state: directory
+    - name: Create ~/.local/bin/applications/neovim
+      file:
+        path: "{{ home }}/.local/applications/neovim"
+        state: directory
+
+    - name: Install core packages
+      become: true
+      apt:
+        pkg:
+          - build-essential
+          - git
+          - curl
+          - fdclone
+          - terminator
+          - wireshark
+          - ripgrep
+          - fd-find
+          - bat
+
+    - name: Rename batcat -> bat
+      file:
+        src: "/usr/bin/batcat"
+        dest: "/usr/bin/bat"
+        state: link
+    - name: Rename fdfind -> fnd 
+      file:
+        src: "/usr/bin/fdfind"
+        dest: "/usr/bin/fnd"
+        state: link
+
+    - name: Fetch neovim
+      get_url: 
+        url: https://github.com/neovim/neovim/releases/download/v0.7.0/nvim.appimage
+        dest: "{{ nvim_location }}/nvim-0.7.0.appimage"
+    - name: Make neovim executable 
+      file:
+        path: "{{ nvim_location }}/nvim-0.7.0.appimage"
+        mode: u=rwx
+    - name: Link neovim to Path
+      file:
+        src: "{{ nvim_location }}/nvim-0.7.0.appimage"
+        dest: "/home/{{ ansible_user_id }}/.local/bin/nvim"
+        state: link
+
+    - name: Install Jetbrains Mono nerd font
+      shell: "/bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh)\""
