@@ -1,4 +1,4 @@
-- hosts: localhost 
+- hosts: braden_Wallace
   vars:
     home: /home/{{ ansible_user_id }}
     nvim_location: /home/{{ ansible_user_id }}/.local/applications/neovim
@@ -35,14 +35,21 @@
       apt:
         pkg:
           - build-essential
-          - git
-          - curl
-          - fdclone
           - terminator
-          - wireshark
+          - zsh
+          - git
+          - libfuse2
+          - curl
+
+    - name: Install utility applications 
+      become: true
+      apt:
+        pkg:
           - ripgrep
           - fd-find
           - bat
+          - exa
+          - wireshark
 
     - name: Rename batcat -> bat
       file:
@@ -54,6 +61,9 @@
         src: "/usr/bin/fdfind"
         dest: "/usr/bin/fnd"
         state: link
+
+    - name: Install oh-my-zsh
+      shell: "sh -c \"$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\""
 
     - name: Fetch neovim
       get_url: 
@@ -71,3 +81,60 @@
 
     - name: Install Jetbrains Mono nerd font
       shell: "/bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh)\""
+
+    - name: Install Meslo Reg 
+      shell:
+        cmd: curl "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf" -o "$HOME/.local/share/fonts/MesloLGS NF Regular.ttf"
+    - name: Install Meslo bold 
+      shell:
+        cmd: curl "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf" -o "$HOME/.local/share/fonts/MesloLGS NF Bold.ttf"
+    - name: Install Meslo italics 
+      shell:
+        cmd: curl "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf" -o "$HOME/.local/share/fonts/MesloLGS NF Italic.ttf"
+    - name: Install Meslo bold italics 
+      shell:
+        cmd: curl "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf" -o "$HOME/.local/share/fonts/MesloLGS NF Bold Italic.ttf"
+
+    - name: Pull dotfiles into bare repo
+      git:
+        repo: "git@github.com:brahste/dotfiles.git"
+        dest: "{{ home }}/.cfg"
+        bare: yes
+
+    - name: Backup conflicting dotfiles
+      file: 
+        path: "{{ home }}/.config-backup"
+        state: directory
+    - name: Delete Terminator config 
+      file: 
+        path: "{{ home }}/.config/terminator/config"
+        state: absent 
+    - name: Delete Terminator config 
+      file: 
+        path: "{{ home }}/.zshrc"
+        state: absent 
+    - name: Install packer for nvim
+      shell:
+        cmd: git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+   
+    - name: Install zsh-autosuggestions
+      shell:
+        cmd: git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+    - name: Install zsh-syntax-highlighting
+      shell:
+        cmd: git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+    - name: Install powerline10k
+      shell:
+        cmd: git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+
+    - name: Install Rustup
+      shell:
+        cmd: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+
+    - name: Install Lsd
+      shell:
+        cmd: cargo install lsd
+
+    - name: Install Vivid
+      shell:
+        cmd: cargo install vivid
