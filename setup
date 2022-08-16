@@ -1,0 +1,4 @@
+#!/bin/bash
+touch hosts
+echo "[$USER]" >> hosts
+echo "localhost ansible_connection=local ansible_user=$USER" >> hosts

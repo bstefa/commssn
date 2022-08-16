@@ -1,4 +1,4 @@
-- hosts: braden_Wallace
+- hosts: braden  
   vars:
     home: /home/{{ ansible_user_id }}
     nvim_location: /home/{{ ansible_user_id }}/.local/applications/neovim
@@ -45,22 +45,79 @@
       become: true
       apt:
         pkg:
-          - ripgrep
-          - fd-find
-          - bat
-          - exa
           - wireshark
 
-    - name: Rename batcat -> bat
-      file:
-        src: "/usr/bin/batcat"
-        dest: "/usr/bin/bat"
-        state: link
-    - name: Rename fdfind -> fnd 
-      file:
-        src: "/usr/bin/fdfind"
-        dest: "/usr/bin/fnd"
-        state: link
+    - name: Download ripgrep
+      vars: 
+        item: ripgrep 
+      get_url:
+        url="https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep_13.0.0_amd64.deb"
+        dest="/home/{{ ansible_user_id }}/Downloads/{{ item }}.deb"
+    - name: Install ripgrep
+      become: true
+      vars: 
+        item: ripgrep 
+      apt: deb="/home/{{ ansible_user_id }}/Downloads/{{ item }}.deb"
+      sudo: true
+
+    - name: Download batcat 
+      vars: 
+        item: batcat
+      get_url:
+        url="https://github.com/sharkdp/bat/releases/download/v0.21.0/bat_0.21.0_amd64.deb"
+        dest="/home/{{ ansible_user_id }}/Downloads/{{ item }}.deb"
+    - name: Install batcat 
+      become: true
+      vars: 
+        item: batcat
+      apt: deb="/home/{{ ansible_user_id }}/Downloads/{{ item }}.deb"
+
+    - name: Download fd-find 
+      vars: 
+        item: fdfind 
+      get_url:
+        url="https://github.com/sharkdp/fd/releases/download/v8.4.0/fd_8.4.0_amd64.deb"
+        dest="/home/{{ ansible_user_id }}/Downloads/{{ item }}.deb"
+    - name: Install fd-find 
+      become: true
+      vars: 
+        item: fdfind 
+      apt: deb="/home/{{ ansible_user_id }}/Downloads/{{ item }}.deb"
+
+    - name: Download lsd 
+      vars: 
+        item: lsd 
+      get_url:
+        url="https://github.com/Peltoche/lsd/releases/download/0.22.0/lsd_0.22.0_amd64.deb"
+        dest="/home/{{ ansible_user_id }}/Downloads/{{ item }}.deb"
+    - name: Install lsd 
+      become: true
+      vars: 
+        item: lsd 
+      apt: deb="/home/{{ ansible_user_id }}/Downloads/{{ item }}.deb"
+
+    - name: Download vivid 
+      vars: 
+        item: vivid 
+      get_url:
+        url="https://github.com/sharkdp/vivid/releases/download/v0.8.0/vivid_0.8.0_amd64.deb"
+        dest="/home/{{ ansible_user_id }}/Downloads/{{ item }}.deb"
+    - name: Install vivid 
+      become: true
+      vars: 
+        item: vivid 
+      apt: deb="/home/{{ ansible_user_id }}/Downloads/{{ item }}.deb"
+
+      #    - name: Rename batcat -> bat
+      #      file:
+      #        src: "/usr/bin/batcat"
+      #        dest: "/usr/bin/bat"
+      #        state: link
+      #    - name: Rename fdfind -> fnd 
+      #      file:
+      #        src: "/usr/bin/fdfind"
+      #        dest: "/usr/bin/fnd"
+      #        state: link
 
     - name: Install oh-my-zsh
       shell: "sh -c \"$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\""
