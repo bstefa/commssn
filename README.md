@@ -14,6 +14,7 @@ To commission a new device follow these steps:
    ```bash
    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
    python get-pip.py --user
+   rm get-pip.py
    ```
    
 3. Clone this repo.
