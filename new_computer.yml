@@ -1,35 +1,13 @@
-- hosts: braden  
+---
+- hosts: {{ ansible_user_id }} 
   vars:
     home: /home/{{ ansible_user_id }}
     nvim_location: /home/{{ ansible_user_id }}/.local/applications/neovim
+
+  roles:
+    - create_directories
+
   tasks:
-
-    - name: Create ~/dev
-      file:
-        path: "{{ home }}/dev"
-        state: directory
-    - name: Create ~/dev/src-third-party
-      file:
-        path: "{{ home }}/dev/src-third-party"
-        state: directory
-
-    - name: Create ~/.local/bin
-      file:
-        path: "{{ home }}/.local/bin"
-        state: directory
-    - name: Create ~/.local/bin/applications
-      file:
-        path: "{{ home }}/.local/applications"
-        state: directory
-    - name: Create ~/.local/share/fonts
-      file:
-        path: "{{ home }}/.local/share/fonts"
-        state: directory
-    - name: Create ~/.local/bin/applications/neovim
-      file:
-        path: "{{ home }}/.local/applications/neovim"
-        state: directory
-
     - name: Install core packages
       become: true
       apt:
@@ -108,17 +86,6 @@
         item: vivid 
       apt: deb="/home/{{ ansible_user_id }}/Downloads/{{ item }}.deb"
 
-      #    - name: Rename batcat -> bat
-      #      file:
-      #        src: "/usr/bin/batcat"
-      #        dest: "/usr/bin/bat"
-      #        state: link
-      #    - name: Rename fdfind -> fnd 
-      #      file:
-      #        src: "/usr/bin/fdfind"
-      #        dest: "/usr/bin/fnd"
-      #        state: link
-
     - name: Install oh-my-zsh
       shell: "sh -c \"$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\""
 
@@ -180,6 +147,9 @@
     - name: Install zsh-syntax-highlighting
       shell:
         cmd: git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+    - name: Install fzf
+      shell:
+        cmd: git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install
     - name: Install powerline10k
       shell:
         cmd: git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
@@ -187,11 +157,3 @@
     - name: Install Rustup
       shell:
         cmd: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-
-    - name: Install Lsd
-      shell:
-        cmd: cargo install lsd
-
-    - name: Install Vivid
-      shell:
-        cmd: cargo install vivid

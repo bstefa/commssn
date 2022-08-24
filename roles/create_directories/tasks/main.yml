@@ -1,0 +1,26 @@
+---
+- name: Create ~/dev
+  file:
+    path: "{{ home }}/dev"
+    state: directory
+- name: Create ~/dev/src-third-party
+  file:
+    path: "{{ home }}/dev/src-third-party"
+    state: directory
+- name: Create ~/.local/bin
+  file:
+    path: "{{ home }}/.local/bin"
+    state: directory
+- name: Create ~/.local/bin/applications
+  file:
+    path: "{{ home }}/.local/applications"
+    state: directory
+- name: Create ~/.local/share/fonts
+  file:
+    path: "{{ home }}/.local/share/fonts"
+    state: directory
+- name: Create ~/.local/bin/applications/neovim
+  file:
+    path: "{{ home }}/.local/applications/neovim"
+    state: directory
+
