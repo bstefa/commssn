@@ -6,118 +6,11 @@
 
   roles:
     - create_directories
+    - install_packages
+    - install_fonts
+    - configure_terminal
 
   tasks:
-    - name: Install core packages
-      become: true
-      apt:
-        pkg:
-          - build-essential
-          - terminator
-          - zsh
-          - git
-          - libfuse2
-          - curl
-
-    - name: Install utility applications 
-      become: true
-      apt:
-        pkg:
-          - wireshark
-
-    - name: Download ripgrep
-      vars: 
-        item: ripgrep 
-      get_url:
-        url="https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep_13.0.0_amd64.deb"
-        dest="/home/{{ ansible_user_id }}/Downloads/{{ item }}.deb"
-    - name: Install ripgrep
-      become: true
-      vars: 
-        item: ripgrep 
-      apt: deb="/home/{{ ansible_user_id }}/Downloads/{{ item }}.deb"
-      sudo: true
-
-    - name: Download batcat 
-      vars: 
-        item: batcat
-      get_url:
-        url="https://github.com/sharkdp/bat/releases/download/v0.21.0/bat_0.21.0_amd64.deb"
-        dest="/home/{{ ansible_user_id }}/Downloads/{{ item }}.deb"
-    - name: Install batcat 
-      become: true
-      vars: 
-        item: batcat
-      apt: deb="/home/{{ ansible_user_id }}/Downloads/{{ item }}.deb"
-
-    - name: Download fd-find 
-      vars: 
-        item: fdfind 
-      get_url:
-        url="https://github.com/sharkdp/fd/releases/download/v8.4.0/fd_8.4.0_amd64.deb"
-        dest="/home/{{ ansible_user_id }}/Downloads/{{ item }}.deb"
-    - name: Install fd-find 
-      become: true
-      vars: 
-        item: fdfind 
-      apt: deb="/home/{{ ansible_user_id }}/Downloads/{{ item }}.deb"
-
-    - name: Download lsd 
-      vars: 
-        item: lsd 
-      get_url:
-        url="https://github.com/Peltoche/lsd/releases/download/0.22.0/lsd_0.22.0_amd64.deb"
-        dest="/home/{{ ansible_user_id }}/Downloads/{{ item }}.deb"
-    - name: Install lsd 
-      become: true
-      vars: 
-        item: lsd 
-      apt: deb="/home/{{ ansible_user_id }}/Downloads/{{ item }}.deb"
-
-    - name: Download vivid 
-      vars: 
-        item: vivid 
-      get_url:
-        url="https://github.com/sharkdp/vivid/releases/download/v0.8.0/vivid_0.8.0_amd64.deb"
-        dest="/home/{{ ansible_user_id }}/Downloads/{{ item }}.deb"
-    - name: Install vivid 
-      become: true
-      vars: 
-        item: vivid 
-      apt: deb="/home/{{ ansible_user_id }}/Downloads/{{ item }}.deb"
-
-    - name: Install oh-my-zsh
-      shell: "sh -c \"$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\""
-
-    - name: Fetch neovim
-      get_url: 
-        url: https://github.com/neovim/neovim/releases/download/v0.7.0/nvim.appimage
-        dest: "{{ nvim_location }}/nvim-0.7.0.appimage"
-    - name: Make neovim executable 
-      file:
-        path: "{{ nvim_location }}/nvim-0.7.0.appimage"
-        mode: u=rwx
-    - name: Link neovim to Path
-      file:
-        src: "{{ nvim_location }}/nvim-0.7.0.appimage"
-        dest: "/home/{{ ansible_user_id }}/.local/bin/nvim"
-        state: link
-
-    - name: Install Jetbrains Mono nerd font
-      shell: "/bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh)\""
-
-    - name: Install Meslo Reg 
-      shell:
-        cmd: curl "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf" -o "$HOME/.local/share/fonts/MesloLGS NF Regular.ttf"
-    - name: Install Meslo bold 
-      shell:
-        cmd: curl "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf" -o "$HOME/.local/share/fonts/MesloLGS NF Bold.ttf"
-    - name: Install Meslo italics 
-      shell:
-        cmd: curl "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf" -o "$HOME/.local/share/fonts/MesloLGS NF Italic.ttf"
-    - name: Install Meslo bold italics 
-      shell:
-        cmd: curl "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf" -o "$HOME/.local/share/fonts/MesloLGS NF Bold Italic.ttf"
 
     - name: Pull dotfiles into bare repo
       git:
@@ -129,30 +22,16 @@
       file: 
         path: "{{ home }}/.config-backup"
         state: directory
+
     - name: Delete Terminator config 
       file: 
         path: "{{ home }}/.config/terminator/config"
         state: absent 
+
     - name: Delete Terminator config 
       file: 
         path: "{{ home }}/.zshrc"
         state: absent 
-    - name: Install packer for nvim
-      shell:
-        cmd: git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim
-   
-    - name: Install zsh-autosuggestions
-      shell:
-        cmd: git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-    - name: Install zsh-syntax-highlighting
-      shell:
-        cmd: git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-    - name: Install fzf
-      shell:
-        cmd: git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install
-    - name: Install powerline10k
-      shell:
-        cmd: git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 
     - name: Install Rustup
       shell:
