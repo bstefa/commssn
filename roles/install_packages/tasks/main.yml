@@ -27,7 +27,6 @@
   vars: 
     item: ripgrep 
   apt: deb="/home/{{ ansible_user_id }}/Downloads/{{ item }}.deb"
-  sudo: true
 
 - name: Download batcat 
   vars: 

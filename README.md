@@ -38,12 +38,10 @@ Depending on your system, some of these steps may be optional.
    cd commssn
    ```
 
-4. Set your hosts.
+4. Set your hosts (root privilages required).
    
    ```bash
    ./setup
-   mkdir -p /etc/ansible
-   cp hosts /etc/ansible/hosts
    ```
 
 5. Commission the device.

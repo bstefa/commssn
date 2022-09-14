@@ -1,8 +1,8 @@
 ---
-- hosts: {{ ansible_user_id }} 
+- hosts: "{{ user }}" 
   vars:
-    home: /home/{{ ansible_user_id }}
-    nvim_location: /home/{{ ansible_user_id }}/.local/applications/neovim
+    home: "/home/{{ user }}"
+    nvim_location: "/home/{{ user }}/.local/applications/neovim"
 
   roles:
     - create_directories
