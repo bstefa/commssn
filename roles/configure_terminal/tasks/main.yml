@@ -1,0 +1,50 @@
+---
+- name: Remove oh-my-zsh
+  file:
+    state: absent
+    path: "{{ ansible_env.HOME }}/.oh-my-zsh"
+
+- name: Install oh-my-zsh
+  shell: "sh -c \"$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\""
+
+- name: Install zsh-autosuggestions
+  shell:
+    cmd: git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+- name: Install zsh-syntax-highlighting
+  shell:
+    cmd: git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+
+- name: Install fzf
+  shell:
+    cmd: git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install
+
+- name: Install powerline10k
+  shell:
+    cmd: git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+
+- name: Fetch neovim
+  get_url: 
+    url: https://github.com/neovim/neovim/releases/download/v0.7.0/nvim.appimage
+    dest: "{{ nvim_location }}/nvim-0.7.0.appimage"
+
+- name: Make neovim executable 
+  file:
+    path: "{{ nvim_location }}/nvim-0.7.0.appimage"
+    mode: u=rwx
+
+- name: Link neovim to Path
+  file:
+    src: "{{ nvim_location }}/nvim-0.7.0.appimage"
+    dest: "/home/{{ ansible_user_id }}/.local/bin/nvim"
+    state: link
+
+- name: Remove nvim artifacts and packer
+  file:
+    state: absent
+    path: "{{ ansible_env.HOME }}/.local/share/nvim/"
+
+- name: Install packer for nvim
+  shell:
+    cmd: git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+

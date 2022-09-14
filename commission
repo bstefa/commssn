@@ -1,2 +1,2 @@
 #!/bin/bash
-ansible-playbook new_computer.yml --ask-become-pass
+ansible-playbook new_computer.yml --ask-become-pass --extra-vars "user=$USER"
