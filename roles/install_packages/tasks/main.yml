@@ -10,12 +10,6 @@
       - libfuse2
       - curl
 
-- name: Install utility applications 
-  become: true
-  apt:
-    pkg:
-      - wireshark
-
 - name: Install markdown editors
   become: true
   community.general.snap:

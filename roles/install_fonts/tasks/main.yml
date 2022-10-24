@@ -4,17 +4,17 @@
 
 - name: Install Meslo Reg 
   shell:
-    cmd: curl "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf" -o "$HOME/.local/share/fonts/MesloLGS NF Regular.ttf"
+    cmd: curl "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf" -Lo "$HOME/.local/share/fonts/MesloLGS NF Regular.ttf"
 
 - name: Install Meslo bold 
   shell:
-    cmd: curl "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf" -o "$HOME/.local/share/fonts/MesloLGS NF Bold.ttf"
+    cmd: curl "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf" -Lo "$HOME/.local/share/fonts/MesloLGS NF Bold.ttf"
 
 - name: Install Meslo italics 
   shell:
-    cmd: curl "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf" -o "$HOME/.local/share/fonts/MesloLGS NF Italic.ttf"
+    cmd: curl "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf" -Lo "$HOME/.local/share/fonts/MesloLGS NF Italic.ttf"
 
 - name: Install Meslo bold italics 
   shell:
-    cmd: curl "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf" -o "$HOME/.local/share/fonts/MesloLGS NF Bold Italic.ttf"
+    cmd: curl "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf" -Lo "$HOME/.local/share/fonts/MesloLGS NF Bold Italic.ttf"
 

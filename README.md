@@ -20,8 +20,7 @@ Depending on your system, some of these steps may be optional.
    
    ```bash
    sudo apt update && sudo apt upgrade
-   sudo apt install -y git curl 
-   sudo apt install -y python3-distutils python3-testresources
+   sudo apt install -y git curl python3-distutils python3-testresources
    ```
 
 2. Create a new SSH key pair
@@ -51,17 +50,24 @@ Depending on your system, some of these steps may be optional.
 5. Set your hosts.
    
    ```bash
-   sudo ./setup
+   ./setup
    ```
 
-6. Commission the device (export the path to Ansible if not done already).
+6. Commission the device (first, export the path to Ansible if not done already).
    
    ```bash
    export PATH=$PATH:$HOME/.local/bin
    ./commission
    ```
 
-7. Restart you Zsh session with `exec zsh`
+7. Reset your font cache and set Zsh as your default shell.
+   
+   ```bash
+   fc-cache -fv
+   chsh -s $(which zsh)
+   ```
+
+8. Exit and reopen your console (Ctrl+Shft+W then Ctrl+Shft+T). Terminator should open. Change the default font to JetBrains Mono Nerd Font Regular (right click > Preferences > Profiles).
 
 By the end of these steps your terminal will look pretty bare, you need to configure and sync with existing devices to get your system back up to its expected state.
 
@@ -73,7 +79,9 @@ By the end of these steps your terminal will look pretty bare, you need to confi
    sudo apt install syncthing
    ```
 
-2. Run Syncthing and add your new device to the set of nodes (see [Getting Started: Syncthing documentation](https://docs.syncthing.net/intro/getting-started.html#getting-started)).
+2. Run `syncthing`and add your new device to the set of nodes (see [Getting Started: Syncthing documentation](https://docs.syncthing.net/intro/getting-started.html#getting-started)).
+   
+   - Select **Add Remote Device** (bottom right)
 
 3. Once your device is synced, go to *~/.braden-home-overlay* and set up you symlinks.
    
@@ -82,8 +90,18 @@ By the end of these steps your terminal will look pretty bare, you need to confi
    ./setup_symlinks
    ```
 
-4. Install your Nvim packages with `:PackerSync`.
+4. Install your Nvim packages with `:PackerSync`. TreeSitter may fail to install correctly, this is okay, it will resolve itself on future launches of Nvim.
 
-Voila! Your new device is set up, now go make some bugs.
+Voila! Your new device is (nearly) set up, now go make some bugs.
 
-# 
+## Final Touches
+
+1. Update your Terminator colors to match the colours in **extras/terminal_colors**
+
+2. Setup the Systemd service for Syncthing in **extras/syncthing.service**
+   
+   ```bash
+   cp extras/syncthing.service ~/.config/systemd/user/
+   systemctl --user start syncthing
+   systemctl --user enable syncthing
+   ```
