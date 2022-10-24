@@ -15,6 +15,10 @@
   shell:
     cmd: git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 
+- name: Remove fzf
+  file:
+    state: absent
+    path: "{{ ansible_env.HOME }}/.fzf"
 - name: Install fzf
   shell:
     cmd: git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install

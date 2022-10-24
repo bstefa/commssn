@@ -12,17 +12,34 @@ The software configuration is broken into two stages:
 
 ### Stage 1: Commissioning
 
+> Tested on Ubuntu 20.04 (focal)
+
 Depending on your system, some of these steps may be optional.
 
-1. Create a new SSH key pair
+1. Update and upgrade your APT sources and install some required packages
    
    ```bash
-   ssh-keygen -t ed25519 -f id_ed25519
+   sudo apt update && sudo apt upgrade
+   sudo apt install -y git curl 
+   sudo apt install -y python3-distutils python3-testresources
+   ```
+
+2. Create a new SSH key pair
+   
+   ```bash
+   ssh-keygen -t ed25519
    ```
    
    and provide the public key to GitHub so you can authenticate.
 
-2. Install [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-and-upgrading-ansible-with-pip) with pip.
+3. Clone this repo.
+   
+   ```bash
+   git clone git@github.com:brahste/commssn.git .commssn
+   cd .commssn
+   ```
+
+4. Install [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-and-upgrading-ansible-with-pip) with pip.
    
    ```bash
    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
@@ -31,31 +48,27 @@ Depending on your system, some of these steps may be optional.
    rm get-pip.py
    ```
 
-3. Clone this repo.
+5. Set your hosts.
    
    ```bash
-   git clone git@github.com:brahste/commssn.git
-   cd commssn
+   sudo ./setup
    ```
 
-4. Set your hosts (root privilages required).
+6. Commission the device (export the path to Ansible if not done already).
    
    ```bash
-   ./setup
+   export PATH=$PATH:$HOME/.local/bin
+   ./commission
    ```
 
-5. Commission the device.
-   
-   ```
-   ./commision
-   ```
-   
-6. Restart you Zsh session with `exec zsh`
+7. Restart you Zsh session with `exec zsh`
+
+By the end of these steps your terminal will look pretty bare, you need to configure and sync with existing devices to get your system back up to its expected state.
 
 ### Stage 2: Configuration
-   
-1. Install [Syncthing](https://syncthing.net/).
 
+1. Install [Syncthing](https://syncthing.net/).
+   
    ```bash
    sudo apt install syncthing
    ```
@@ -69,6 +82,8 @@ Depending on your system, some of these steps may be optional.
    ./setup_symlinks
    ```
 
-3. Install your Nvim packages with `:PackerSync`.
+4. Install your Nvim packages with `:PackerSync`.
 
 Voila! Your new device is set up, now go make some bugs.
+
+# 

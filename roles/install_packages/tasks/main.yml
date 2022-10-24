@@ -16,6 +16,24 @@
     pkg:
       - wireshark
 
+- name: Install markdown editors
+  become: true
+  community.general.snap:
+    name:
+      marktext
+
+- name: Download obsidian 
+  vars: 
+    item: obsidian 
+  get_url:
+    url="https://github.com/obsidianmd/obsidian-releases/releases/download/v1.0.0/obsidian_1.0.0_amd64.deb"
+    dest="/home/{{ ansible_user_id }}/Downloads/{{ item }}.deb"
+- name: Install obsidian 
+  become: true
+  vars: 
+    item: obsidian 
+  apt: deb="/home/{{ ansible_user_id }}/Downloads/{{ item }}.deb"
+
 - name: Download ripgrep
   vars: 
     item: ripgrep 
