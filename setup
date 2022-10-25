@@ -2,5 +2,5 @@
 touch hosts
 echo "[$USER]" >> hosts
 echo "localhost ansible_connection=local ansible_user=$USER" >> hosts
-mkdir -p /etc/ansible
-cp hosts /etc/ansible/hosts
+sudo mkdir -p /etc/ansible
+cat hosts | sudo tee -a /etc/ansible/hosts

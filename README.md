@@ -73,10 +73,14 @@ By the end of these steps your terminal will look pretty bare, you need to confi
 
 ### Stage 2: Configuration
 
-1. Install [Syncthing](https://syncthing.net/).
+1. Install [Syncthing](https://syncthing.net/) from their releases page [here](https://github.com/syncthing/syncthing/releases/tag/v1.22.0). Do not install with APT, since the version on APT is out of date, the Systemd service auto-start functionailty won't work properly.
    
    ```bash
-   sudo apt install syncthing
+   cd Downloads
+   curl -LO "https://github.com/syncthing/syncthing/releases/download/v1.22.0/syncthing-linux-amd64-v1.22.0.tar.gz"
+   tar -xzvf syncthing-linux-amd64-v1.22.0.tar.gz
+   cd syncthing-linux-amd64-v1.22.0/
+   sudo cp syncthing /usr/bin/
    ```
 
 2. Run `syncthing`and add your new device to the set of nodes (see [Getting Started: Syncthing documentation](https://docs.syncthing.net/intro/getting-started.html#getting-started)).
